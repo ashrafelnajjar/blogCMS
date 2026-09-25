@@ -1,17 +1,20 @@
 const Joi = require("joi");
 
-const signupSchema = new Joi.object({
-  name: Joi.string().required().max(30),
-  email: Joi.string().email().required(),
-  password: Joi.string().email().required().max(30),
-});
+const signupSchema = {
+  body: Joi.object().keys({
+    name: Joi.string().required().max(30),
+    email: Joi.string().email().required(),
+    password: Joi.string().required().max(40),
+  }),
+};
 
-const loginSchema = new Joi.object({
-  email: Joi.string().email().required(),
-  password: Joi.string().email().required().max(30),
-});
-
+const loginSchema = {
+  body: Joi.object().keys({
+    email: Joi.string().email().required(),
+    password: Joi.string().required().max(40),
+  }),
+};
 module.exports = {
-    loginSchema,
-    signupSchema
-}
+  loginSchema,
+  signupSchema,
+};

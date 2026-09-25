@@ -2,7 +2,6 @@ const Post = require("../models/post");
 
 const AppError = require("../utils/AppError");
 
-
 const createPost = async (req, res) => {
   const Post = await Post.create({
     title: req.body.title,
@@ -81,4 +80,41 @@ const toggleLikePost = async (req, res) => {
   });
 };
 
-module.exports = {createPost,  getAllPost, getPostById, toggleLikePost };
+const updatePost = async (req, res) => {
+  const post = await Post.findById(req.params.id);
+  if (!post) throw new AppError("post is not found", 404);
+  if (
+    req.user.role !== "admin" &&
+    post.author.toString() !== req.user._id.toString()
+  )
+    throw new AppError("you are not authorized to update this Post", 403);
+  const updatepost = await Post.findByIdAndupdate(
+    req.params.id,
+    {
+      title: req.body.title,
+      content: req.body.content,
+    },
+    { new: true },
+  );
+  res.status(200).json({ message: "success", data: updatepost });
+};
+const deletePost = async (req, res) => {
+  const post = await Post.findById(req.params.id);
+  if (!post) throw new AppError("post is not found", 404);
+  if (
+    req.user.role !== "admin" &&
+    post.author.toString() !== req.user._id.toString()
+  )
+    throw new AppError("you are not authorized to delete this Post", 403);
+  const deletepost = await Post.findByIdAndDelete(req.params.id);
+  res.status(200).json({ message: "success"});
+};
+
+module.exports = {
+  createPost,
+  getAllPost,
+  getPostById,
+  toggleLikePost,
+  updatePost,
+  deletePost
+};

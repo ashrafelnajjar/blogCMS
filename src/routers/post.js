@@ -1,17 +1,54 @@
-const express = require("express")
-const router = express.Router()
+const express = require("express");
+const router = express.Router();
 
-const {createPost,  getAllPost, getPostById, toggleLikePost } = require("../controllers/post")
-const { deletedComment, addComment } = require("../controllers/comment")
-const auth = require("../middlewares/auth")
+const {
+  createPost,
+  getAllPost,
+  getPostById,
+  toggleLikePost,
+  updatePost,
+  deletePost,
+} = require("../controllers/post");
 
+const auth = require("../middlewares/auth");
+const joiValidation = require("../middlewares/joi-validation");
+const {
+  createPostSchema,
+  deleteORgetORtoggleLikePostSchema,
+  updatePostSchema,
+} = require("../validators/post");
+const { addCommentSchema } = require("../validators/comment");
+const { addComment } = require("../controllers/comment");
 
+//comment
+router.post(
+  "/:postId/comments",
+  joiValidation(addCommentSchema),
+  auth,
+  addComment,
+);
 
-router.post("/:postId/comments" ,auth ,addComment )
+//post
+router.get("/", getAllPost);
+router.post("/", auth, joiValidation(createPostSchema), createPost);
 
-router.get("/", getAllPost)
-router.post("/",auth ,createPost )
-router.get("/:id",getPostById)
-router.patch("/:id/like",auth,toggleLikePost)
+router.patch("/:id", auth, joiValidation(updatePostSchema), updatePost);
+router.delete(
+  "/:id",
+  auth,
+  joiValidation(deleteORgetORtoggleLikePostSchema),
+  deletePost,
+);
+router.get(
+  "/:id",
+  joiValidation(deleteORgetORtoggleLikePostSchema),
+  getPostById,
+);
+router.patch(
+  "/:id/like",
+  auth,
+  joiValidation(deleteORgetORtoggleLikePostSchema),
+  toggleLikePost,
+);
 
-module.exports = router
+module.exports = router;
