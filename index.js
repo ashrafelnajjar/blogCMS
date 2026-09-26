@@ -12,9 +12,9 @@ const routercomment = require("./src/routers/comment");
 const app = express();
 app.use(express.json());
 
-app.use("api/v1/auth", routerauth);
-app.use("api/v1/comments", routercomment);
-app.use("api/v1/posts", routerpost);
+app.use("/api/v1/auth", routerauth);
+app.use("/api/v1/comments", routercomment);
+app.use("/api/v1/posts", routerpost);
 
 
 app.use(notfound);
