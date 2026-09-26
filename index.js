@@ -15,9 +15,7 @@ app.use(express.json());
 app.use("api/v1/auth", routerauth);
 app.use("api/v1/comments", routercomment);
 app.use("api/v1/posts", routerpost);
-app.use("/", (req, res) => {
-  res.status(200).json({ message: "success" });
-});
+
 
 app.use(notfound);
 app.use(errorhandler);
