@@ -1,14 +1,14 @@
-const Post = require("../models/post");
 
 const AppError = require("../utils/AppError");
+const Post = require("../models/post");
 
 const createPost = async (req, res) => {
-  const Post = await Post.create({
+  const post = await Post.create({
     title: req.body.title,
     content: req.body.content,
     author: req.user._id,
   });
-  res.status(201).json({ status: "success", data: Post });
+  res.status(201).json({ status: "success", data: post });
 };
 
 const getAllPost = async (req, res) => {
